@@ -1,0 +1,74 @@
+controller:
+  admissionWebhooks:
+    enabled: false
+  autoscaling:
+    enabled: true
+    maxReplicas: 5
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+  config:
+    http-snippet: |
+      server {
+        listen 18080;
+
+        location /nginx_status {
+          allow all;
+          stub_status on;
+        }
+
+        location / {
+          return 404;
+        }
+      }
+    nginx-status-ipv4-whitelist: 10.131.188.64/26
+    proxy-read-timeout: "120"
+    proxy-send-timeout: "120"
+    proxy-body-size: 100m
+  image:
+    digest: ""
+    repository: registry-docker.apps.eul.sncf.fr/04255.prod/k8s.nginx-ingress-controller
+    tag: v0.48.1
+  ingressClass: nginx
+  minAvailable: 1
+  podAnnotations:
+    ad.datadoghq.com/controller.check_names: '["nginx", "nginx_ingress_controller"]'
+    ad.datadoghq.com/controller.init_configs: '[{},{}]'
+    ad.datadoghq.com/controller.instances: '[{"nginx_status_url":"http://%%host%%:18080/nginx_status"},{"prometheus_url":
+      "http://%%host%%:10254/metrics"}]'
+    ad.datadoghq.com/controller.logs: '[{"service": "controller", "source":"nginx_ingress_controller"}]'
+    nginx.ingress.kubernetes.io/whitelist-source-range: 10.131.188.64/26
+  priorityClassName: ttdok
+  replicaCount: 4
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 550Mi
+    requests:
+      cpu: 100m
+      memory: 200Mi
+  scope:
+    enabled: true
+    namespace: eot-iot-tld-rec
+  service:
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    externalTrafficPolicy: Local
+    loadBalancerIP: 10.131.188.109
+defaultBackend:
+  enabled: true
+  image:
+    repository: registry-docker.apps.eul.sncf.fr/04255.prod/k8s.nginx-ingress-defaultbackend-amd64
+    tag: "1.5"
+  priorityClassName: ttdok
+  resources:
+    limits:
+      cpu: 50m
+      memory: 50Mi
+    requests:
+      cpu: 50m
+      memory: 50Mi
+fullnameOverride: eot-iot-tld-rec-nginx-ingress
+rbac:
+  scope: true
+tf_custom_helm: false

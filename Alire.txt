@@ -1,0 +1,25 @@
+Upgrade de ingress
+
+vendredi 17 juillet 2020
+15:08
+
+Attention à la manipulation 
+
+Pour Upgarder Ingress récupère les charts d'ingress depuis internet et vérifier la version avant "c'est dire la version actuelle sur le namespace soit elle doit pareil, soit ancienne 
+
+1- récupère le repo 
+https://github.com/helm/charts/tree/master/stable/nginx-ingress
+https://gitlab-repo-mob.apps.eul.sncf.fr/dsit-mat/groupetelediag-mat-dsit-mat/04368/deployments/api-ingress-controller
+
+	1- Sur le NS en question récupére le fichier Values d'ingress via CMD
+helm3 get values aks-nginx-ingress-controller -o yaml > values_aks-nginx-ingress-controller.yaml
+	2- Tu modifies ton ingress avec la valeur souhaitée
+	3- Sur te déplace vers la répertoire en question /nginx-ingress
+	4- Copier/coller Values sur le répertoire
+	5- Sur Vscode  " cd /nginx-ingress"
+	6- Lancer la cmd  helm3 upgrade aks-nginx-ingress-controller --kubeconfig /c/Users/EMAA11191/.kube/config . -f ./values_aks-nginx-ingress-controller.yaml --namespace iot-ts-cockpit-dev
+		Reponse 
+			Release "aks-nginx-ingress-controller" has been upgraded. Happy Helming!
+			
+	14/04/2021 update ingress controller 
+            helm3 upgrade aks-nginx-ingress-controller -f ./aks-nginx-ingress-controller.yaml .

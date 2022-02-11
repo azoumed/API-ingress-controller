@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  x-client-app: "true"
+kind: ConfigMap
+metadata:
+  name: dev-tld-api-custom-headers
+  namespace: eot-iot-tld-dev
